@@ -1,0 +1,32 @@
+@startuml
+
+[*] --> start_parsing
+start_parsing --> parsing_field
+start_parsing : def convert(string)
+parsing_field --> parsing_value
+parsing_field : def parse_field(string)
+parsing_field : Parsing field name
+
+state parsing_value {
+
+  [*] --> start_parsing_value
+  start_parsing_value --> parsing_array_value : if array
+  parsing_array_value : def parse_array(string)
+  parsing_array_value : Break array into values (depths: 1)
+  parsing_array_value : Process each value independently
+  start_parsing_value --> parsing_object_value : if object
+  parsing_object_value: parse_object(string)
+  parsing_object_value: recursive call to entry point
+  start_parsing_value --> parsing_simple_value : if simple value
+  parsing_simple_value: just convert this to corresponding value
+  parsing_simple_value --> parsing_field : returning simple value
+
+  parsing_array_value -->  start_parsing_value : parse each value in array
+  parsing_object_value -->  start_parsing
+
+
+}
+
+
+
+@enduml

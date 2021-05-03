@@ -8,13 +8,13 @@ def convert(json_string: str) ->dict:
     while i < len(json_string):
         char = json_string[i]
         if not field_name:
-            field_name, json_string = calculate_key(json_string)
+            field_name, json_string = parse_field(json_string)
             json_string = skip_unnecessary_chars(json_string)
             i = 0
         elif not value_started and char == ':':
             value_started = True
         elif value_started:
-            value, json_string = calculate_list(json_string[i:])
+            value, json_string = parse_array(json_string[i:])
             i = 0
             json_string = skip_unnecessary_chars(json_string)
             value = value if isinstance(value, list) else convert_value(value)
@@ -39,7 +39,7 @@ def skip_unnecessary_chars(string):
     return string[i:]
 
 
-def calculate_key(string):
+def parse_field(string):
     field_started = False
     field_name_builder = []
 
@@ -56,7 +56,7 @@ def calculate_key(string):
         i += 1
 
 
-def calculate_list(string):
+def parse_array(string):
     string = string.strip()
     value_list = []
     value_builder = []
@@ -138,7 +138,7 @@ def convert_value(value_str):
     elif value_str.startswith('{'):
         return convert(value_str)
     elif value_str.startswith('['):
-        return calculate_list(value_str)[0]
+        return parse_array(value_str)[0]
     elif '.' in value_str:
         return float(value_str)
     else:
