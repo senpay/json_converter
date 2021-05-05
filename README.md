@@ -14,7 +14,7 @@ def test_should_parse_simple_json():
 
 First step would to learn how to parse field names. We read the JSON string from left to right and look for `"` symbols, which we treat as start of field name, which we them read symbol by symbol until we meet another `"`, after which we save field in name in `result` dict and we do this until string is read.
 
-Maybe this diagram would help as well:
+Maybe this diagram would help as well:  
 ![Parsing field names](docs/parsing_field_names.png)
 
 Second step is to parse values as strings. For this we look for `:` symbol as soon as we have read a field name. When we meet `:` - it means the value has started, so we can read it symbol by symbol until we meet either `,` (which means there's another field to read) or `}` (which means end of an object reached).
