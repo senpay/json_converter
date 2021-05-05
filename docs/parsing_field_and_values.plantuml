@@ -1,0 +1,10 @@
+@startuml
+
+[*] --> start_parsing
+start_parsing --> parsing_field
+start_parsing : def convert(string)
+parsing_field --> parsing_value
+parsing_value --> parsing_field  : if more fields to parse
+parsing_value --> [*] : if no more fields to parse
+
+@enduml

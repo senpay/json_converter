@@ -6,5 +6,4 @@ start_parsing : def convert(string)
 parsing_field --> start_parsing
 start_parsing --> [*] : if no more fields to parse
 
-
 @enduml
