@@ -54,6 +54,7 @@ def parse_field(string):
             else:
                 return ''.join(field_name_builder), string[i:]
         i += 1
+    raise ValueError('I really should not be here')
 
 
 def parse_array(string):
@@ -64,7 +65,7 @@ def parse_array(string):
     curly_brackets = []
 
     if not string.startswith('['):
-        return calculate_value(string)
+        return parse_value(string)
 
     i = 0
     while i < len(string):
@@ -91,7 +92,7 @@ def parse_array(string):
                     return [convert_value(x) for x in value_list], string[i:]
 
 
-def calculate_object(string):
+def parse_object(string):
     value_builder = []
     curly_brackets = []
 
@@ -109,16 +110,23 @@ def calculate_object(string):
                 return value_str, string[i:]
 
 
-def calculate_value(string):
+def parse_value(string):
     string = string.strip()
     value_builder = []
+    is_string = False
+    string_started = False
 
     if string.startswith('{'):
-        return calculate_object(string)
+        return parse_object(string)
+
+    if string.startswith('"'):
+        is_string = True
 
     for i in range(len(string)):
         char = string[i]
-        if char in ('}', ','):
+        if char == '"' and is_string:
+            string_started = not string_started
+        if char in ('}', ',') and not string_started:
             value_str = ''.join(value_builder)
             return value_str, string[i:]
         else:
